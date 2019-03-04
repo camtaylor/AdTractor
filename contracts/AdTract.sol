@@ -5,18 +5,15 @@ contract AdTract{
     
     // optional: uint private funds;
     mapping(address => address payable) private referrals;
-    address private owner;
-    //change to dynamic value not hardcoded
-    uint percentageReward = 2;
+    address payable private owner;
+    uint percentageReward;
     
-    constructor() public payable{
-        owner = msg.sender;
-    }
-   
+    //refer customer 
     function refer(address customer) public{
         referrals[customer] = msg.sender;
     }
     
+    //fallback function that handles payments to all involved parties
     function() payable external{
         
         //look at referrals, match customer to advertiser
@@ -28,7 +25,25 @@ contract AdTract{
         //pay advertiser  
         advertiser.transfer(reward);
         
-        //transfer remaining transaction to business
+        //pay AdTractor
         
-    }   
+        //transfer remaining transaction to business
+        owner.transfer(msg.value - reward);
+    }
+    
+    //will set owner of this contract in AdTractor contract
+    function setOwner(address payable _owner) public{
+        //only Adtractor can assign owner
+        //require(AdTractor address == msg.sender);
+        
+        owner = _owner;
+    }
+    
+    //set advertiser's reward percentage
+    function setPercentageReward(uint value) private{
+        require(owner == msg.sender);
+        percentageReward = value;
+    }
+    
+    
 }
