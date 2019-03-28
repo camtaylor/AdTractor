@@ -8,7 +8,7 @@ contract AdTractor{
     //deploy new AdTrac, track business and contracts
     function newAdTract(uint percentageReward) public{
         AdTract ad = new AdTract(percentageReward, msg.sender);
-        adtracts.push(ad);
+        adtracts.push(address(ad));
     }
 
 }
