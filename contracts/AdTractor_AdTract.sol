@@ -1,41 +1,37 @@
 pragma solidity ^0.5.4;
 
 contract AdTractor{
-    //mapping of contracts
-    mapping(address => _business) private businesses;
-    //keep track of businesses that deploy AdTract
-    address[] business;
-    
-    struct _business{
-        address[] contractsAddress;
-    }
-    
+
+    // List of deployed AdTracts
+    address[] public adtracts;
+    uint public contractsCount = 0;
+
     //deploy new AdTrac, track business and contracts
-    function newAdTract(uint percentageReward) public{
-        business.push(msg.sender);
-        AdTract ad = new AdTract(percentageReward, msg.sender);
-        _business storage b = businesses[msg.sender];
-        b.contractsAddress.push(address(ad)); 
-    }
-    
-    //get contracts that the business deployed    
-    function getContracts() public view returns(address[] memory){
-        return businesses[msg.sender].contractsAddress;
+    function newAdTract(uint percentageReward, string memory description, string memory url, string memory title) public{
+        AdTract ad = new AdTract(percentageReward, msg.sender, description, url, title);
+        adtracts.push(address(ad));
+        contractsCount += 1;
     }
 }
 
 contract AdTract{
     
     //optional: uint private funds;
+    string public description;
+    string public url;
+    string public title;
     mapping(address => address payable[]) private referrals;
     address payable private owner;
     address private _AdTractor;
     uint private percentageReward;
     
-    constructor(uint reward, address payable _owner) public{
+    constructor(uint reward, address payable _owner, string memory _description, string memory _url, string memory _title) public{
         _AdTractor = msg.sender;
         percentageReward = reward;
         owner = _owner;
+        description = _description;
+        url = _url;
+        title = _title;
     }
     
     //refer customer 
