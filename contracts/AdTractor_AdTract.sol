@@ -12,6 +12,7 @@ contract AdTractor{
         adtracts.push(address(ad));
         contractsCount += 1;
     }
+
 }
 
 contract AdTract{
